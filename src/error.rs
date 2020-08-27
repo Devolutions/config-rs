@@ -131,14 +131,12 @@ impl ConfigError {
                 unexpected,
                 expected,
                 key,
-            } => {
-                ConfigError::Type {
-                    origin,
-                    unexpected,
-                    expected,
-                    key: Some(concat(key)),
-                }
-            }
+            } => ConfigError::Type {
+                origin,
+                unexpected,
+                expected,
+                key: Some(concat(key)),
+            },
             ConfigError::NotFound(key) => ConfigError::NotFound(concat(Some(key))),
             _ => self,
         }

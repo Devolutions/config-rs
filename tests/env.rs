@@ -1,4 +1,5 @@
 extern crate config;
+extern crate serde_derive;
 
 use config::*;
 use std::env;
@@ -70,4 +71,30 @@ fn test_empty_value_is_ignored() {
     assert!(!environment.collect().unwrap().contains_key("c_a_b"));
 
     env::remove_var("C_A_B");
+}
+
+#[test]
+fn test_env_boolean() {
+    use serde_derive::{Deserialize, Serialize};
+
+    env::set_var("SOME_PREFIX_BAR", "true");
+    env::set_var("SOME_PREFIX_TEST", "tst");
+
+    #[derive(Serialize, Deserialize, Default)]
+    struct Foo {
+        test: String,
+        bar: bool,
+    }
+
+    let environment = Environment::new().ignore_empty(true).prefix("SOME_PREFIX");
+    let mut conf = Config::new();
+    conf.merge(Config::try_from(&Foo::default()).unwrap());
+    conf.merge(environment);
+    let foo: Foo = conf.try_into().unwrap();
+
+    assert_eq!(foo.test, "tst");
+    assert_eq!(foo.bar, true);
+
+    env::remove_var("FOO__BAR");
+    env::remove_var("FOO__TEST");
 }

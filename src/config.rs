@@ -161,8 +161,7 @@ impl Config {
         match value {
             Some(value) => {
                 // Deserialize the received value into the requested type
-                T::deserialize(value)
-                    .map_err(|e| e.extend_with_key(key))
+                T::deserialize(value).map_err(|e| e.extend_with_key(key))
             }
 
             None => Err(ConfigError::NotFound(key.into())),
@@ -170,19 +169,20 @@ impl Config {
     }
 
     pub fn get_str(&self, key: &str) -> Result<String> {
-        self.get(key).and_then(Value::into_str)
+        self.get(key).and_then(Value::try_into)
     }
 
     pub fn get_int(&self, key: &str) -> Result<i64> {
-        self.get(key).and_then(Value::into_int)
+        self.get(key).and_then(Value::try_into)
     }
 
     pub fn get_float(&self, key: &str) -> Result<f64> {
-        self.get(key).and_then(Value::into_float)
+        self.get(key).and_then(Value::try_into)
     }
 
     pub fn get_bool(&self, key: &str) -> Result<bool> {
-        self.get(key).and_then(Value::into_bool)
+        println!("Trying to get bool for key `{}`", key);
+        self.get(key).and_then(Value::try_into)
     }
 
     pub fn get_table(&self, key: &str) -> Result<HashMap<String, Value>> {
@@ -203,11 +203,6 @@ impl Config {
         let mut serializer = ConfigSerializer::default();
         from.serialize(&mut serializer)?;
         Ok(serializer.output)
-    }
-
-    #[deprecated(since = "0.7.0", note = "please use 'try_into' instead")]
-    pub fn deserialize<'de, T: Deserialize<'de>>(self) -> Result<T> {
-        self.try_into()
     }
 }
 
