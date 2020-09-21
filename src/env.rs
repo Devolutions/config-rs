@@ -109,9 +109,22 @@ impl Source for Environment {
                 key = key.replace(separator, ".");
             }
 
+            let value_kind = if let Ok(i) = value.parse::<i64>() {
+                ValueKind::Integer(i)
+            } else if let Ok(f) = value.parse::<f64>() {
+                ValueKind::Float(f)
+            } else {
+                match value.to_ascii_lowercase().as_str() {
+                    "true" => ValueKind::Boolean(true),
+                    "false" => ValueKind::Boolean(false),
+                    "null" => ValueKind::Nil,
+                    _ => ValueKind::String(value),
+                }
+            };
+
             m.insert(
                 key.to_lowercase(),
-                Value::new(Some(&uri), ValueKind::String(value)),
+                Value::new(Some(&uri), value_kind),
             );
         }
 
