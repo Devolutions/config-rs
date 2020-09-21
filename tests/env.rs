@@ -88,8 +88,8 @@ fn test_env_boolean() {
 
     let environment = Environment::new().ignore_empty(true).prefix("SOME_PREFIX");
     let mut conf = Config::new();
-    conf.merge(Config::try_from(&Foo::default()).unwrap());
-    conf.merge(environment);
+    conf.merge(Config::try_from(&Foo::default()).unwrap()).expect("should work");
+    conf.merge(environment).expect("should work");
     let foo: Foo = conf.try_into().unwrap();
 
     assert_eq!(foo.test, "tst");

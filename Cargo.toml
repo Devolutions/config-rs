@@ -22,8 +22,8 @@ ini = ["rust-ini"]
 
 [dependencies]
 lazy_static = "1.0"
-serde = "1.0.8"
-nom = "5.0.0"
+serde = "1.0"
+nom = "5.0"
 
 toml = { version = "0.5", optional = true }
 serde_json = { version = "1.0.2", optional = true }
@@ -32,6 +32,6 @@ serde-hjson = { version = "0.9", optional = true }
 rust-ini = { version = "0.13", optional = true }
 
 [dev-dependencies]
-serde_derive = "1.0.115"
-float-cmp = "0.4"
+serde_derive = "1.0"
+float-cmp = "0.6"
 chrono = { version = "0.4", features = ["serde"] }

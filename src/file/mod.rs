@@ -119,6 +119,9 @@ where
         // Parse the string using the given format
         format
             .parse(uri.as_ref(), &contents)
-            .map_err(|cause| ConfigError::FileParse { uri, cause })
+            .map_err(|cause| ConfigError::FileParse {
+                uri,
+                cause,
+            })
     }
 }
